@@ -1,0 +1,144 @@
+:root {
+  --paper: #e8ebef;
+  --ink: #16202e;
+  --muted: #5a6676;
+  --panel: #ffffff;
+  --line: #cbd1d9;
+  --signal: #e10600;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+}
+.account-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(48px, 10vh, 120px) 20px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Barlow', system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+.account-page *,
+.account-page *::before,
+.account-page *::after {
+  box-sizing: border-box;
+}
+
+.account-box {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  width: 100%;
+  max-width: 1000px;
+  background: var(--panel);
+}
+
+/* Fond uni. Pour une image : background: url('/votre-image.jpg') center / cover; */
+.account-image {
+  min-height: 320px;
+  background: var(--ink);
+  border-left: 8px solid var(--signal);
+}
+
+.account-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: clamp(20px, 4vw, 36px);
+}
+
+.account-message {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 4px solid var(--signal);
+  background: var(--paper);
+}
+
+.account-card {
+  padding-top: 4px;
+}
+
+.titre {
+  margin: 0 0 14px;
+  font: 800 34px / 1 var(--display);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form input,
+.form select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.form input:focus-visible,
+.form select:focus-visible,
+.btn-principal:focus-visible,
+.profil-demo:focus-visible {
+  outline: 3px solid var(--signal);
+  outline-offset: 1px;
+}
+
+.btn-principal {
+  padding: 12px 16px;
+  border: 0;
+  background: var(--ink);
+  color: #fff;
+  font: 700 20px var(--display);
+  cursor: pointer;
+}
+
+.btn-principal:hover {
+  background: var(--signal);
+}
+
+.profils-demo {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.profil-demo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 6px;
+  border: 1px solid var(--line);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.profil-demo:hover {
+  border-color: var(--ink);
+}
+
+.profil-demo img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+}
+
+.profil-demo p {
+  margin: 0;
+  font: 700 17px var(--display);
+}
+
+@media (max-width: 720px) {
+  .account-box {
+    grid-template-columns: 1fr;
+  }
+
+  .account-image {
+    min-height: 90px;
+  }
+}
