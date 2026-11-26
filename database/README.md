@@ -10,13 +10,13 @@ Ce dossier contient **JUSTE les schémas** (et plus tard les scripts d'ingestion
 
 ```bash
 npm install
-cp .env.example .env     # puis remplir MONGODB_URI
+cp .env.example .env     # puis remplir DATABASE_URI
 ```
 
 `.env` :
 
 ```
-MONGODB_URI=mongodb+srv://USER:PASSWORD@cluster.xxxxx.mongodb.net/f1app?retryWrites=true&w=majority
+DATABASE_URI=mongodb+srv://USER:PASSWORD@cluster.xxxxx.mongodb.net/f1app?retryWrites=true&w=majority
 ```
 
 - Le nom de la base (`f1app`) va avant le `?`.
