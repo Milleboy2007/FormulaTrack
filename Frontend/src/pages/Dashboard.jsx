@@ -1,4 +1,4 @@
-import { PiloteCard } from '../components/PiloteCard';
+import { Pilotes } from '../components/PiloteCard';
 
 export default function Dashboard() {
     return(
