@@ -258,7 +258,7 @@ Les index ralentissent légèrement les écritures : on n'en ajoute pas « au ca
 - **Point de freinage** : l'endroit où le pilote commence à freiner avant un virage.
 - **Sortie de virage** : la vitesse et l'accélération en quittant le virage ; une bonne sortie fait gagner du temps sur la ligne droite suivante.
 - **Stint** : une période de roulage avec le même train de pneus (en F1, un seul pilote par voiture).
-- **Tour de sortie (out lap)** : le tour juste après un arrêt aux stands, lent à cause des pneus froids.
+- **Tour de sortie (out lap)** : le tour juste après un arrêt aux stands (pit stop), lent à cause des pneus froids.
 - **Safety car / VSC** : la voiture de sécurité (ou la version « virtuelle ») qui ralentit toute la course après un incident.
 - **DNF / DNS / DSQ** : n'a pas fini / n'a pas pris le départ / disqualifié.
 - **Dépassement** : un pilote prend la place d'un autre (OpenF1 inclut aussi les changements de position dus aux arrêts et aux pénalités).
