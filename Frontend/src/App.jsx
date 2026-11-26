@@ -10,14 +10,13 @@ import SignUp from './pages/auth/SignUp';
 export default function App() {
   return (
     <Routes>
-      {/*
-      <Route path="/pilotes" element={<Pilotes />} />
-      <Route path="/profil" element={<Profil />} />
-      <Route path="/explore" element={<Explore />} /> */}
       <Route path="/" element={<Home />} />
-      <Route path="/sign-up" element={<SignUp />} />
-      <Route path="/sign-in" element={<SignIn />} />
       <Route path="/compte" element={<Compte />} />
+      {/* <Route path="/pilotes" element={<Pilotes />} /> */}
+      {/* <Route path="/profil" element={<Profil />} /> */}
+      {/* <Route path="/explore" element={<Explore />} /> */}
+      {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+      
       
     </Routes>
   );

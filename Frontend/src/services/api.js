@@ -35,16 +35,20 @@ const del = (path) => request(path, { method: 'DELETE' } )
 
 // HOME
 
-// COMTPE
-
-// SIGNIN
+// USERS
+export const whoAmI = () => get(`/users/whoami`)
+export const getUsers = () => get(`/users`)
+export const getUserId = (id) => get(`/users/${id}`)
 
 // SIGNUP
 
 // PROFIL
+export const getPersonalScore = () => get(`/profile/score`)
+export const updateProfile = (body) => patch(`/profile/score`, {body})
+// export const updateProfile = (body) => get(`/profile/score`)
 
 // EXPLORE
 
 // FAVORIS
 
-// JEU
+// DASHBOARD

@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800&family=Barlow:wght@400;500&display=swap');
+
+.profil-page {
+  --paper: #e8ebef;
+  --ink: #16202e;
+  --muted: #5a6676;
+  --panel: #ffffff;
+  --line: #cbd1d9;
+  --signal: #e10600;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+  min-height: 100vh;
+  padding: clamp(24px, 5vw, 56px) clamp(16px, 4vw, 40px);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Barlow', system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+.profil-page *,
+.profil-page *::before,
+.profil-page *::after {
+  box-sizing: border-box;
+}
+
+.profil-page h1 {
+  max-width: 900px;
+  margin: 0 auto 24px;
+  font: 800 clamp(40px, 8vw, 64px) / 0.95 var(--display);
+}
+
+.profil-layout {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.profil-top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 16px;
+}
+
+.card {
+  padding: 22px;
+  background: var(--panel);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.msg {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 4px solid var(--signal);
+  background: var(--paper);
+}
+
+.section-title {
+  margin: 0 0 14px;
+  font: 800 28px / 1 var(--display);
+}
+
+/* Profil */
+.profil-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.profil-head img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+}
+
+.profil-head h2 {
+  margin: 0;
+  font: 800 30px / 1 var(--display);
+}
+
+.profil-head small {
+  color: var(--muted);
+}
+
+.profil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profil-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.profil-form input,
+select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--ink);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+
+.profil-form input[readonly] {
+  border-color: transparent;
+  background: var(--paper);
+}
+
+.profil-form input:focus-visible,
+select:focus-visible,
+.btn:focus-visible,
+.tabs button:focus-visible,
+.fav button:focus-visible {
+  outline: 3px solid var(--signal);
+  outline-offset: 1px;
+}
+
+/* Boutons */
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  align-self: flex-start;
+  padding: 10px 18px;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: #fff;
+  font: 700 18px var(--display);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn.ghost:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.btn.alert {
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.btn.alert:hover {
+  background: #a80400;
+  border-color: #a80400;
+}
+
+/* Score */
+.score-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 6px solid var(--signal);
+}
+
+.score-card small {
+  color: var(--muted);
+}
+
+.score-card strong {
+  font: 800 clamp(56px, 9vw, 88px) / 1 var(--display);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Favoris */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.tabs button {
+  padding: 8px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: 700 18px var(--display);
+  cursor: pointer;
+}
+
+.tabs button[aria-selected='true'] {
+  background: var(--ink);
+  color: #fff;
+}
+
+.fav-list {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fav {
+  display: grid;
+  grid-template-columns: 6px 48px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding-right: 8px;
+  background: var(--paper);
+}
+
+.fav-bar {
+  align-self: stretch;
+  background: var(--team);
+}
+
+.fav img {
+  width: 48px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.fav-who {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.fav-who strong {
+  font: 700 19px var(--display);
+}
+
+.fav-who small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.fav button {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.fav button:hover {
+  color: var(--signal);
+}
+
+/* Zone de danger */
+.danger {
+  border-top: 4px solid var(--signal);
+}
+
+.danger p {
+  margin: 0 0 12px;
+}
+
+@media (max-width: 640px) {
+  .profil-top {
+    grid-template-columns: 1fr;
+  }
+}
