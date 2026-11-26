@@ -32,6 +32,12 @@ export class Lap extends Document {
 
     @Prop({ required: false })
     intermediateSpeed2?: number; // en km/h, vitesse à laquelle un driver sort du secteur 2 (y en à pas pour secteur 3)
+     
+    @Prop() // SOFT, MEDIUM, HARD... (liste ouverte côté API, donc String et pas enum), vient de stints
+    tyreCompound?: string;
+
+    @Prop() // tours déjà faits par ce train de pneus au début du tour, dérivé des stints (à confirmer)
+    tyreAge?: number;
 }
 
 export const LapSchema = SchemaFactory.createForClass(Lap)
