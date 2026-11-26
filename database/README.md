@@ -108,8 +108,7 @@ Une « course » = une `Session` dont le `type` est `Race`. Les sessions de prat
 | `grandprix.schema.ts` | `GrandPrix` | Un week-end de Grand Prix | Ingérée (`meetings`) |
 | `session.schema.ts` | `Session` | Une session (pratique, qualifs, sprint, course) + météo résumée | Ingérée (`sessions`, `weather`) |
 | `result.schema.ts` | `Result` | Résultat final d'un pilote dans une session | Ingérée (`session_result`, `starting_grid`) |
-| `lap.schema.ts` | `Lap` | Un tour : temps, secteurs, vitesses intermédiaires, tour de sortie des stands | Ingérée (`laps`) |
-| `raceEvent.schema.ts` | `RaceEvent` | Événements : arrêts aux stands, dépassements, drapeaux/safety car | Ingérée (`pit`, `overtakes`, `race_control`) |
+| `lap.schema.ts` | `Lap` | Un tour : temps, secteurs, vitesses intermédiaires, tour de sortie des stands, pneus (composé et âge) | Ingérée (`laps`, `stints`) || `raceEvent.schema.ts` | `RaceEvent` | Événements : arrêts aux stands, dépassements, drapeaux/safety car | Ingérée (`pit`, `overtakes`, `race_control`) |
 | `lapTelemetry.schema.ts` | `LapTelemetry` | Télémétrie d'un tour (vitesse, freins, gaz, position x/y) | Ingérée (`car_data`, `location`) |
 | `cornerStats.schema.ts` | `CornerStats` | Stats par virage, par tour, par pilote (freinage, vitesse mini, sortie) | **Dérivée** (backend) |
 | `raceSummary.schema.ts` | `RaceSummary` | Résumé d'une course (podium, moments clés), mis en cache | **Dérivée** (backend) |
@@ -139,6 +138,12 @@ Une ligne par pilote par session. `dnf`, `dns`, `dsq` séparés. `gapToLeader` e
 ### `Lap`
 Clé unique : `sessionKey + driverKey + lapNumber`. `isPitOutLap` ne marque que les tours **de sortie** des stands (l'API n'a pas de flag pour le tour d'entrée). `intermediateSpeed1/2` : vitesses aux points intermédiaires de l'API (supposées être en fin de secteur 1 et 2, **à confirmer**). Pas de vitesse pour le secteur 3.
 
+**Pneus** : `tyreCompound` (SOFT, MEDIUM, HARD…) et `tyreAge` (tours déjà faits par le train de pneus au début du tour) viennent de l'endpoint `stints`. Le script d'ingestion associe chaque tour au stint qui le contient (entre `lap_start` et `lap_end`) :
+- `tyreCompound` = composé du stint ;
+- `tyreAge` = `tyre_age_at_start + (lapNumber - lap_start)` (formule dérivée, **à confirmer** sur une course).
+
+Ça permet de comparer deux pilotes à âge de pneus égal et de remplir `tyreSequence` dans `RaceSummary`. Le composé est un `String` et non un enum : la liste des valeurs de l'API est ouverte.
+
 ### `RaceEvent`
 Une seule collection pour tous les types d'événements (`type` : `Pit`, `Overtake`, `RaceControl`). Les champs propres à un type sont optionnels. `eventKey` est construit par le script d'ingestion (évite les doublons).
 - Les dépassements d'OpenF1 incluent aussi les changements de position dus aux arrêts aux stands et aux pénalités : il faut les filtrer.
@@ -158,7 +163,7 @@ Pour savoir où sur la piste un échantillon de `carData` s'est produit, il faut
 Un document par **session + pilote + tour + virage** : début de freinage, durée de freinage (approximative), vitesses d'entrée/minimale/sortie, reprise des gaz, etc. L'application lit ces documents pour comparer deux pilotes. `isCleanLap` permet de filtrer les tours non représentatifs (tour de sortie des stands, tour 1, safety car). `analysisVersion` permet de savoir quoi recalculer si l'algorithme change.
 
 ### `RaceSummary` (collection dérivée / cache)
-Un document par session de **course ou sprint** : podium, pole, meilleur tour, nombre de dépassements en piste, arrêts, safety cars, abandons, `keyMoments[]` (dépassements, arrêts, safety car…) et un résumé par pilote. `cause` d'un moment clé est une **inférence** (ex. « OnTrack », « Pit », « SafetyCar »), pas un fait de l'API. `status: Partial` tant que les résultats officiels ne sont pas publiés.
+Un document par session de **course ou sprint** : podium, pole, meilleur tour, nombre de dépassements en piste, arrêts, safety cars, abandons, `keyMoments[]` (dépassements, arrêts, safety car…) et un résumé par pilote. `cause` d'un moment clé est une **inférence** (ex. « OnTrack », « Pit », « SafetyCar »), pas un fait de l'API. `status: Partial` tant que les résultats officiels ne sont pas publiés. `tyreSequence` (ordre des pneus de chaque pilote) se calcule à partir des champs `tyreCompound` des tours.
 
 ---
 
@@ -241,6 +246,7 @@ Les index ralentissent légèrement les écritures : on n'en ajoute pas « au ca
 - **Historique** : l'API OpenF1 gratuite couvre 2023 et après (pas de clé API pour l'historique).
 - **Le frein est binaire** (on/off) et la fréquence est ~3,7 Hz : la précision d'un point de freinage est d'environ 20 m à haute vitesse. Les analyses sont des **approximations**.
 - **Inside/outside** : la doc d'OpenF1 dit que `location` manque de précision latérale. `lineOffset` dans `CornerStats` est **expérimental**.
+- **Pneus** : le calcul de `tyreAge` à partir des stints est une dérivation à confirmer sur une course. Les stints peuvent aussi manquer pour certaines sessions : `tyreCompound` et `tyreAge` sont donc optionnels.
 - **DRS** : depuis 2026, l'aéro est active (plus seulement DRS). À vérifier ce que le champ contient pour les courses 2026 (on stocke le code brut).
 - **Unité des coordonnées** : à confirmer que `location` utilise la même unité/le même repère que le fichier de circuit (test à faire sur un circuit).
 - **Vitesses intermédiaires** : à confirmer qu'elles sont bien mesurées en fin de secteur.
