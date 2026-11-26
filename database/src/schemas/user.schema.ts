@@ -1,16 +1,22 @@
-import { Schema, model, InferSchemaType } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-//en plain mongoose vu que j'ai pas le projet de la back-end yet
-export const UserSchema = new Schema(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
-    passwordHash: { type: String, required: true, select: false },
-    favoriteDriverKeys: { type: [String], default: [] },
-    favoriteCircuitKeys: { type: [Number], default: [] },
-  },
-  { timestamps: true },
-);
+@Schema({ timestamps: true })
+export class User extends Document {
+  @Prop({ required: true })
+  name: string;
 
-export type User = InferSchemaType<typeof UserSchema>;
-export const UserModel = model('User', UserSchema);
+  @Prop({ required: true, unique: true, lowercase: true })
+  email: string;
+
+  @Prop({ required: true, select: false })
+  passwordHash: string;
+
+  @Prop({ type: [String], default: [] })
+  favoriteDriverKeys: string[];
+
+  @Prop({ type: [Number], default: [] })
+  favoriteCircuitKeys: number[];
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);

@@ -1,22 +1,37 @@
-import { Schema, model, InferSchemaType } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export const GrandPrixSchema = new Schema(
-    {
-        meetingKey: { type: Number, required: true, unique: true },
-        year: { type: Number, required: true },
-        name: { type: String, required: true },
-        officialName: { type: String, required: false },
-        circuitKey: { type: Number, required: true },
-        dateStart: { type: Date, required: true },
-        dateEnd: { type: Date, required: true },
-        gmtOffset: { type: Number, required: true }, //offset GMT du circuit, pour convertir les horaires de l'api en heure locale du circuit (so GP de singapour affiche l'heure du GP en heure locale de singapour)
-        isCanceled: { type: Boolean, default: false },
-    },
-    { timestamps: true}
-)
+@Schema({ timestamps: true })
+export class GrandPrix extends Document {
+  @Prop({ required: true, unique: true })
+  meetingKey: number;
 
-GrandPrixSchema.index({ year: 1 }); //check les GP par années croissantes
-GrandPrixSchema.index({ circuitKey: 1 }); //check les GP par ID de circuits croissants
+  @Prop({ required: true })
+  year: number;
 
-export type GrandPrix = InferSchemaType<typeof GrandPrixSchema>;
-export const GrandPrixModel = model('GrandPrix', GrandPrixSchema);
+  @Prop({ required: true })
+  name: string;
+
+  @Prop()
+  officialName?: string;
+
+  @Prop({ required: true })
+  circuitKey: number;
+
+  @Prop({ required: true })
+  dateStart: Date;
+
+  @Prop({ required: true })
+  dateEnd: Date;
+
+  @Prop({ required: true }) // offset de l'heure du circuit (GMT), pour afficher les horaires en heure locale du circuit, so genre GP de mtl va show le starting time de mtl, pas celui du uk par exemple
+  gmtOffset: number;
+
+  @Prop({ default: false })
+  isCanceled: boolean;
+}
+
+export const GrandPrixSchema = SchemaFactory.createForClass(GrandPrix);
+
+GrandPrixSchema.index({ year: 1 }); // GP par année
+GrandPrixSchema.index({ circuitKey: 1 }); // GP par circuit

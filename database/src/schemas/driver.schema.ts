@@ -1,31 +1,47 @@
-import { Schema, model, InferSchemaType } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-//les info de saison d'un pilote (numéro, team, couleur de l'équipe)
-const DriverSeasonSchema = new Schema(
-  {
-    year: { type: Number, required: true },
-    teamName: { type: String, required: true },
-    teamColour: { type: String },      // hex sans le #
-    number: { type: Number, required: true },
-  },
-  { _id: false },
-);
+// infos de saison d'un pilote (numéro, team, couleur de l'équipe)
+@Schema({ _id: false })
+export class DriverSeason {
+  @Prop({ required: true })
+  year: number;
 
-export const DriverSchema = new Schema(
-  {
-    driverKey: { type: String, required: true, unique: true }, //key fait a partir du nom du driver, permets de check des duplicates avant de pull de l'api
-    fullName: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    acronym: { type: String, required: true },
-    pictureUrl: { type: String, required: false }, // au cas ou l'url est vide/missing
-    seasons: { type: [DriverSeasonSchema], default: [] },
-  },
-  { timestamps: true },
-);
+  @Prop({ required: true })
+  teamName: string;
+
+  @Prop() // hex sans #
+  teamColour?: string;
+
+  @Prop({ required: true })
+  number: number;
+}
+export const DriverSeasonSchema = SchemaFactory.createForClass(DriverSeason);
+
+@Schema({ timestamps: true })
+export class Driver extends Document {
+  @Prop({ required: true, unique: true }) // key faite avec nom du driver, permet de checker les duplicates avant de pull de l'api
+  driverKey: string;
+
+  @Prop({ required: true })
+  fullName: string;
+
+  @Prop({ required: false }) //au cas où y a juste le fullName
+  firstName?: string;
+
+  @Prop({ required: false }) //au cas où y a juste le fullName
+  lastName?: string;
+
+  @Prop({ required: true })
+  acronym: string;
+
+  @Prop() // au cas où l'url est vide/missing
+  pictureUrl?: string;
+
+  @Prop({ type: [DriverSeasonSchema], default: [] })
+  seasons: DriverSeason[];
+}
+
+export const DriverSchema = SchemaFactory.createForClass(Driver);
 
 DriverSchema.index({ 'seasons.year': 1 });
-
-
-export type Driver = InferSchemaType<typeof DriverSchema>;
-export const DriverModel = model('Driver', DriverSchema);

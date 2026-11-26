@@ -1,42 +1,80 @@
-import { Schema, model, InferSchemaType } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-const CornerSchema = new Schema(
-    {
-        cornerNumber: { type: Number, required: true },
-        xCoord: { type: Number, required: true },
-        yCoord: { type: Number, required: true },
-        distanceFromStart: { type: Number, required: true }, //en décimètre, distance du point de départ du circuit comparé au corner
-        angle: { type: Number, required: true }, 
-        direction: { type: String, enum: ['Left', 'Right'] },
-    },
-    { _id: false },
-)
+@Schema({ _id: false })
+export class Corner {
+  @Prop({ required: true })
+  cornerNumber: number;
 
-const LayoutSchema = new Schema(
-    {
-        year: { type: Number, required: true },
-        outline: { // forme/tracé du circuit, valeur prise d'une voiture qui parcour réellement le circuit
-            x: { type: [Number], default: [] },
-            y: { type: [Number], default: [] },
-        },
-        corners: { type: [CornerSchema], default: [] },
-        infoUrl: { type: String, required: false },
-    },
-    { _id: false },
-)
+  @Prop({ required: true })
+  xCoord: number;
 
-export const CircuitSchema = new Schema(
-    {
-        circuitKey: { type: Number, required: true, unique: true },
-        shortName: { type: String, required: true },
-        location: { type: String, required: true },
-        countryName: { type: String, required: true },
-        circuitType: { type: String, enum: ['Permanent', 'Temporary - Street', 'Temporary - Road'], required: true }, //enum suit les types de l'api
-        pictureUrl: { type: String, required: false }, // au cas ou l'url est vide/missing
-        layouts: { type: [LayoutSchema], default: [] }, //liste des layouts qu'un circuit a eu over the years, avec l'année et le tracé du circuit
-    },
-    { timestamps: true}
-)
+  @Prop({ required: true })
+  yCoord: number;
 
-export type Circuit = InferSchemaType<typeof CircuitSchema>;
-export const CircuitModel = model('Circuit', CircuitSchema);
+  @Prop({ required: true }) // en décimètre, distance du point de départ du circuit comparé au corner
+  distanceFromStart: number;
+
+  @Prop({ required: true })
+  angle: number;
+
+  @Prop({ type: String, enum: ['Left', 'Right'] })
+  direction?: string;
+}
+export const CornerSchema = SchemaFactory.createForClass(Corner);
+
+@Schema({ _id: false })
+export class Outline {
+  @Prop({ type: [Number], default: [] })
+  x: number[];
+
+  @Prop({ type: [Number], default: [] })
+  y: number[];
+}
+export const OutlineSchema = SchemaFactory.createForClass(Outline);
+
+@Schema({ _id: false })
+export class Layout {
+  @Prop({ required: true })
+  year: number;
+
+  @Prop({ type: OutlineSchema, default: () => ({}) }) // forme/tracé du circuit, pris d'une voiture qui parcourt le circuit frl
+  outline: Outline;
+
+  @Prop({ type: [CornerSchema], default: [] })
+  corners: Corner[];
+
+  @Prop()
+  infoUrl?: string;
+}
+export const LayoutSchema = SchemaFactory.createForClass(Layout);
+
+@Schema({ timestamps: true })
+export class Circuit extends Document {
+  @Prop({ required: true, unique: true })
+  circuitKey: number;
+
+  @Prop({ required: true })
+  shortName: string;
+
+  @Prop({ required: true })
+  location: string;
+
+  @Prop({ required: true })
+  countryName: string;
+
+  @Prop({
+    type: String,
+    enum: ['Permanent', 'Temporary - Street', 'Temporary - Road'], // suit les types de l'api
+    required: true,
+  })
+  circuitType: string;
+
+  @Prop() // au cas où l'url est missing
+  pictureUrl?: string;
+
+  @Prop({ type: [LayoutSchema], default: [] }) // layouts du circuit durant les années
+  layouts: Layout[];
+}
+
+export const CircuitSchema = SchemaFactory.createForClass(Circuit);
